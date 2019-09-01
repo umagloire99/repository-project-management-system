@@ -1,0 +1,14 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<script type="text/javascript" src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="/static/ckeditor/ckeditor-init.js" data-ckeditor-basepath="/static/ckeditor/ckeditor/" id="ckeditor-init-script"></script>
+
+<form enctype="multipart/form-data" method=POST data-url="{% url 'project:update' project.id %}" class="create-form" >
+   {% csrf_token %}
+   {{ form|crispy }}
+
+ <div class="modal-footer">
+   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+   <input type="submit" class="btn btn-primary" value="Update Project">
+</div>
+</form>

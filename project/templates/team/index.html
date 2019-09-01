@@ -1,0 +1,180 @@
+{% extends 'base_task.html' %}
+     {% load staticfiles %}
+
+{% block content %}
+<div id="main-content" class="container-fluid" style="min-height: 666px;">
+{% if messages %}
+{% for message in messages %}
+<div class="row">
+     <div class="col-md-12">
+     <div class="alert {{ message.tags }}">{{ message }}</div>
+      </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-folder-open"></span> Team Members</div>
+    <div class="db-header-extra form-inline">
+    <div class="btn-group">
+    <div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    View By Project    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <li><a href="{% url 'project:team_filter' 0 %}">All Your Projects</a></li>
+      {% for p in all_project %}
+      <li><a href="{% url 'project:team_filter' p.id %}">{{ p.name }}</a></li>
+      {% endfor %}
+      </ul>
+</div>
+</div>
+
+
+    <button class="btn btn-primary btn-sm show-form" data-url="{% url 'project:team_create' 0 %}">Add Team Member</button>
+
+
+</div>
+</div>
+<div>
+{% for p in project %}
+ <p>You are currently viewing members for a specific project: <strong>{{ p.name }}</strong> </p>
+
+<h4>Project: <a href="#">{{ p.name }}</a></h4>
+ <form action="{% url 'project:team_update' p.id %}" class="form-horizontal" method="post" accept-charset="utf-8">
+      {% csrf_token %}
+ <div class="table-responsive">
+<table class="table table-bordered">
+<tbody>
+<tr class="table-header">
+<td>Users</td>
+<td colspan="12">Permissions</td>
+</tr>
+<tr>
+<td><strong>Members</strong></td>
+{% for r in roles %}
+<td><strong>{{ r.name | title }}</strong></td>
+{% endfor %}
+</tr>
+{% for m in team %}
+{% ifequal m.project p %}
+<tr>
+<td>
+<input type="hidden" name="{{ m.id }}" value="{{ m.id }}">
+<div class="user-box-avatar">
+                <div class="online-dot-user" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Online"></div>
+                <a href="#"><img src="{% static 'images/user.png' %}" title="" data-toggle="tooltip" data-placement="right" data-original-title="{{ m.member.username }}"></a>
+                </div><div class="user-box-name"><p>{{ m.member.first_name }} {{ m.member.last_name }} </p><p class="user-box-username">@<a href="#">{{ m.member.username }}</a></p></div>
+        {% ifnotequal m.member users  %}
+        <a href="{% url 'project:team_delete' m.id %}" class="btn btn-danger btn-xs" onclick="functionName(event)">Remove</a>
+        {% endifnotequal %}
+</td>
+{% for roles in roles %}
+{% if roles in m.role.all %}
+<td>
+<input type="checkbox" name="{{ roles }}{{ m.id }}" value="1" checked="">
+</td>
+{% else %}
+<td><input type="checkbox" name="{{ roles }}{{ m.id }}" value="1">
+{% endif %}
+{% endfor %}
+</tr>
+{% endifequal %}
+{% endfor %}
+</tbody></table>
+</div>
+<p><input type="submit" class="btn btn-primary" value="Update"></p>
+        </form>
+<hr>
+{% endfor %}
+</div>
+</div>
+    </div>
+<div class="modal fade" data-backdrop="false" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog"  role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-folder-open"></span> Add Team Member</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+
+<script type="text/javascript">
+
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search-input");
+  filter = input.value.toUpperCase();
+  table = document.getElementById('tbd');
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+        console.log(td);
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+};
+$(document).ready(function() {
+    var showForm = function() {
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+        $('#addModal').modal('show');
+      },
+      success: function(data) {
+          console.log('yes na me this');
+        $('#addModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+  var saveForm = function() {
+  var form = $(this);
+  var formData = new FormData(form[0])
+  $.ajax({
+  url: form.attr('data-url'),
+  data: formData,
+  type: form.attr('method'),
+  dataType: 'json',
+  async:true,
+  cache:false,
+  contentType: false,
+  enctype:form.attr("enctype"),
+  processData: false,
+  success: function(data) {
+    if (data.form_is_valid){
+        $('#projects-table tbody').html(data.project_task);
+        $('#addModal').modal('hide');
+        $('#message').addClass('show');
+        $('#message').text(data.sms)
+    }
+    else {
+       $('#addModal .modal-body').html(data.html_form)
+    }
+  },
+
+  });
+  		return false;
+};
+$(".show-form").click(showForm);
+$("#addModal").on("submit",".create-form",saveForm);
+
+})
+
+</script>
+{% endblock %}

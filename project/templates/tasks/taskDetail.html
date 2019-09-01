@@ -1,0 +1,352 @@
+{% extends 'base_task.html' %}
+     {% load staticfiles %}
+{% block content %}
+    <div id="main-content">
+
+        <div id="responsive-menu-links">
+          <select name="link" onchange="window.location.href=$(this).val();" class="form-control">
+          <option value="http://titan.patchesoft.com/">Overview</option>
+          <option value="http://titan.patchesoft.com/members">Members</option>
+          <option value="http://titan.patchesoft.com/user_settings">Settings</option>
+                    <option value="http://titan.patchesoft.com/projects">Projects</option>
+                                <option value="http://titan.patchesoft.com/calendar">Your Events</option>
+            <option value="http://titan.patchesoft.com/calendar/all">All Events</option>
+                                <option value="http://titan.patchesoft.com/tasks">Your Project Tasks</option>
+            <option value="http://titan.patchesoft.com/tasks/assigned">Your Assigned Tasks</option>
+                                                      <option value="http://titan.patchesoft.com/files">Your Project Files</option>
+                                            <option value="http://titan.patchesoft.com/team">Your Team</option>
+                        <option value="http://titan.patchesoft.com/time/stats">Your Stats</option>
+                                                                    <option value="http://titan.patchesoft.com/finance">Your Finance</option>
+                                                                  <option value="http://titan.patchesoft.com/notes/personal">Personal</option>
+            <option value="http://titan.patchesoft.com/notes/your">Project Notes</option>
+                    </select>
+</div>
+    <div class="row">
+     <div class="col-md-12">
+     <div id="message" class="alert alert-success hide"><b><span class="glyphicon glyphicon-ok"></span></b></div>
+      </div>
+     </div>
+
+        <div class="white-area-content">
+
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-tasks"></span> Tasks</div>
+    <div class="db-header-extra"> <button  class="btn btn-primary btn-sm" >Create New Task</button></div>
+</div>
+
+</div>
+
+<div class="row content-separator">
+<div class="col-md-8">
+
+<div class="white-area-content">
+<div class="db-header clearfix">
+    <div class="task-header-title"> <span class="glyphicon glyphicon-pushpin"></span> {{ t.name }} </div>
+    <div class="db-header-extra"> <button id="status-button-update" type="button" class="btn btn-default btn-xs"> <span class="glyphicon glyphicon-refresh spin"></span></button>
+      <div class="btn-group">
+        <div class="btn-group">
+        {% if t.status == 'New' %}
+         <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" id="status-button">
+          {{ t.status }} <span class="caret"></span>
+        </button>
+{% elif t.status == 'In Progress' %}
+ <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" id="status-button">
+          {{ t.status }} <span class="caret"></span>
+        </button>
+{% elif t.status == 'Completed' %}
+ <button type="button" class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown" id="status-button">
+          {{ t.status }} <span class="caret"></span>
+        </button>
+{% elif t.status == 'On Hold' %}
+ <button type="button" class="btn btn-warning btn-xs dropdown-toggle" data-toggle="dropdown" id="status-button">
+          {{ t.status }} <span class="caret"></span>
+        </button>
+{% elif t.status == 'Cancelled' %}
+ <button type="button" class="btn btn-danger btn-xs dropdown-toggle" data-toggle="dropdown" id="status-button">
+          {{ t.status }} <span class="caret"></span>
+        </button>
+ {% endif %}
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="{% url 'project:objective_state' t.id 'New' %}">New</a></li>
+          <li><a href="{% url 'project:objective_state' t.id 'In Progress' %}">In Progress</a></li>
+          <li><a href="{% url 'project:objective_state' t.id 'Completed' %}">Completed</a></li>
+          <li><a href="{% url 'project:objective_state' t.id 'On Hold' %}">On Hold</a></li>
+          <li><a href="{% url 'project:objective_state' t.id 'Cancelled' %}">Cancelled</a></li>
+        </ul>
+      </div>
+      <a href="http://titan.patchesoft.com/tasks/edit_task/13" class="btn btn-primary btn-xs">Edit Task</a>
+      <a href="{% url 'project:task_delete' t.id %}" class="btn btn-danger btn-xs stopAjax" onclick="return confirm('Are you sure you want to do this?')">Delete Task</a>
+      </div>
+    </div>
+</div>
+{{ t.description | safe }}
+<hr>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ t.start_date }}</p>
+<p class="project-info-title">Start Date</p>
+</div>
+<div class="project-info project-block">
+<p class="project-info-bit">{{ t.due_date }}</p>
+<p class="project-info-title">End Date</p>
+</div>
+<div class="project-info project-block">
+<p class="project-info-bit">{{ t.status }}</p>
+<p class="project-info-title">Status</p>
+</div>
+
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ t.member.all.count }}</p>
+<p class="project-info-title">Members</p>
+</div>
+
+<div class="project-info project-block">
+<p class="project-info-bit">  {% if t.days < 0 %}
+OVERDUE {% else %}
+IN TIME
+{% endif %}</p>
+<p class="project-info-title">Overall Status</p>
+</div>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ t.progressbar }}%</p>
+<p class="project-info-title">Progress</p>
+</div>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ t.days }}</p>
+<p class="project-info-title">Days Clocked</p>
+</div>
+
+</div>
+
+<div class="white-area-content content-separator">
+
+<div class="db-header clearfix">
+    <div class="task-header-title"> <span class="glyphicon glyphicon-list-alt"></span> Task Objectives</div>
+    <div class="db-header-extra"> <button class="btn btn-primary btn-xs objective-form" data-url="{% url 'project:objective_create' t.id %}">Add Objective</button> </div>
+</div>
+
+	<div class="row">
+		<div class="col-md-12" id="objectiveList">
+        {% include 'tasks/objectiveList.html' %}
+		</div>
+</div>
+</div>
+
+
+</div>
+
+<div class="col-md-4">
+
+<div class="white-area-content">
+<div class="db-header clearfix">
+    <div class="task-header-title"> <span class="glyphicon glyphicon-user"></span> Task Members</div>
+    <div class="db-header-extra"> <button data-toggle="modal" data-target="#addMemberModal" class="btn btn-primary btn-xs">Add Member</button>  </div>
+</div>
+
+<table class="table table-bordered table-hover">
+<tbody>
+{% for m in t.member.all %}
+<tr><td> <div class="user-box-avatar">
+                <div class="online-dot-user" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Online"></div>
+
+                <a href="http://titan.patchesoft.com/profile/ttum"><img src="{% static 'images/user.png' %}" title="" data-toggle="tooltip" data-placement="right" data-original-title="ttum"></a>
+                </div><div class="user-box-name"><p>{{ m.first_name }} {{ m.last_name }} </p><p class="user-box-username">@<a href="#">{{ m.username }}</a></p></div>
+                </td><td><button id="remind-user-25" class="btn btn-info btn-xs" onclick="remind_user(25)" title="Remind user of this task (sends notification!)"><span class="glyphicon glyphicon-bell"></span></button> <a href="http://titan.patchesoft.com/tasks/remove_member/11/13/8b3909d7d987f69f7cd0ccc630e4180d" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a></td></tr>
+{% endfor %}
+</tbody></table>
+</div>
+
+<div class="white-area-content content-separator">
+<div class="db-header clearfix">
+    <div class="task-header-title"> <span class="glyphicon glyphicon-file"></span> Files</div>
+    <div class="db-header-extra"> <button data-toggle="modal" data-target="#addFileModal" class="btn btn-primary btn-xs">Attach File</button> </div>
+</div>
+
+<table class="table table-bordered table-hover">
+<tbody><tr class="table-header"><td>File</td><td>Type</td><td>Options</td></tr>
+{% for f in file %}
+<tr>
+<td>{{ f.file_name }}</td>
+<td>{{ f.types }}</td>
+<td><button id="remind-user-25" class="btn btn-info btn-xs" onclick="remind_user(25)" title="detail"><span class="glyphicon glyphicon-list-alt"></span></button> <a href="http://titan.patchesoft.com/tasks/remove_member/11/13/8b3909d7d987f69f7cd0ccc630e4180d" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a></td></tr>
+{% endfor %}
+</tbody></table>
+
+</div>
+
+<div class="white-area-content content-separator">
+<div class="db-header clearfix">
+    <div class="task-header-title"> <span class="glyphicon glyphicon-file"></span> Activity Log</div>
+    <div class="db-header-extra">  <a href="http://titan.patchesoft.com/tasks/view_activity/13" class="btn btn-info btn-xs">All Activity</a></div>
+</div>
+
+<table class="table table-bordered table-hover">
+<tbody><tr class="table-header"><td>User</td><td>Action</td></tr>
+<tr><td> <div class="user-box-avatar">
+                <div class="online-dot-user" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Online"></div>
+                <a href="http://titan.patchesoft.com/profile/ttum"><img src="./taskDetail_files/default.png" title="" data-toggle="tooltip" data-placement="right" data-original-title="ttum"></a>
+                </div></td><td><a href="http://titan.patchesoft.com/profile/ttum">ttum</a> deleted an objective <b>cash money</b><p class="small-text"><a href="http://titan.patchesoft.com/tasks/view/13">URL</a> - 08/08/2019 12:21</p></td></tr>
+</tbody></table>
+
+</div>
+
+</div>
+
+
+</div></div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-tasks"></span> Task</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Task Member</h4>
+      </div>
+      <div class="modal-body">
+       <form action="http://titan.patchesoft.com/tasks/add_task_member/13" class="form-horizontal" method="post" accept-charset="utf-8">
+<input type="hidden" name="csrf_test_name" value="8b3909d7d987f69f7cd0ccc630e4180d">
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Select Team Member</label>
+                <div class="col-md-8 ui-front">
+                    <select class="form-control" name="userid">
+                                        	<option value="11">ttum</option>
+                                        </select>
+                </div>
+        </div>
+      </form></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Add Task Member">
+              </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">Attach File</h4>
+      </div>
+      <div class="modal-body">
+       <form action="http://titan.patchesoft.com/tasks/add_file/13" class="form-horizontal" method="post" accept-charset="utf-8">
+<input type="hidden" name="csrf_test_name" value="8b3909d7d987f69f7cd0ccc630e4180d">
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Search for a file (name)</label>
+                <div class="col-md-6 ui-front">
+                    <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span><input type="text" name="file_search" id="file-search" class="ui-autocomplete-input" autocomplete="off">
+                    <input type="hidden" name="file_search_id" id="file-search-hidden">
+                    <span class="help-block">The search results look for files uploaded to the File Manager for this Project.</span>
+                <ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all" id="ui-id-1" tabindex="0" style="display: none;"></ul></div>
+                <div class="col-md-2" id="file-link">
+
+                </div>
+        </div>
+      </form></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Attach File">
+              </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" data-backdrop="false" id="addObjectiveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-list-alt"></span>Add Objective</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    var showForm = function() {
+        console.log("what the fuck")
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+        $('#addModal').modal('show');
+      },
+      success: function(data) {
+        $('#addModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+    var objectiveForm = function() {
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+        $('#addObjectiveModal').modal('show');
+      },
+      success: function(data) {
+          console.log('yes na me this');
+        $('#addObjectiveModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+  var saveForm = function() {
+  var form = $(this);
+  var formData = new FormData(form[0])
+  $.ajax({
+  url: form.attr('data-url'),
+  data: formData,
+  type: form.attr('method'),
+  dataType: 'json',
+  async:true,
+  cache:false,
+  contentType: false,
+  enctype:form.attr("enctype"),
+  processData: false,
+  success: function(data) {
+    if (data.obje){
+        $('#objectiveList').html(data.objective);
+        $('#addObjectiveModal').modal('hide');
+        $('#message').addClass('show');
+        $('#message').text(data.sms)
+    }
+    else {
+       $('#addModal .modal-body').html(data.html_form)
+    }
+  },
+
+  });
+  		return false;
+};
+$(".show-form").click(showForm);
+$(".objective-form").click(objectiveForm);
+$("#addModal").on("submit",".create-form",saveForm);
+$("#addObjectiveModal").on("submit",".create-form",saveForm);
+
+})
+</script>
+{% endblock %}

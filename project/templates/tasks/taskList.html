@@ -1,0 +1,24 @@
+{% for t in task %}
+<tr role="row" class="odd">
+<td><a href="#">{{ t.name }}</a></td>
+{% if t.status == 'New' %}
+<td><label class="label label-info">{{ t.status }}</label></td>
+{% elif t.status == 'In Progress' %}
+<td><label class="label label-primary">{{ t.status }}</label></td>
+{% elif t.status == 'Completed' %}
+<td><label class="label label-success">{{ t.status }}</label></td>
+{% elif t.status == 'On Hold' %}
+<td><label class="label label-warning">{{ t.status }}</label></td>
+{% elif t.status == 'Cancelled' %}
+<td><label class="label label-danger">{{ t.status }}</label></td>
+{% endif %}
+<td><a href="#">{{ t.project.name }}</a></td>
+<td><div class="progress" style="height: 15px;"><div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{ t.progressbar }}%" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="0%">
+<span class="sr-only">0% Complete</span></div></div></td>
+<td class="sorting_1">{{ t.due_date }}</td>
+<td><a href="{% url 'project:task_detail' t.id %}" class="btn btn-info btn-xs stopAjax"title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Detail"><span class="glyphicon glyphicon-list-alt"></span></a>
+<button class="btn btn-warning btn-xs show-form " data-url="{% url 'project:task_update' t.id %}" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></button>
+<a href="{% url 'project:task_delete' t.id %}" class="btn btn-danger btn-xs" onclick="functionName(event)" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+</td>
+</tr>
+{% endfor %}

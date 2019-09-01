@@ -1,0 +1,13 @@
+{% for i in all_inventory %}
+<tr role="row" >
+<td class="sorting_1"><a href="#">{{ i.item }}</a></td>
+<td class="sorting_1"><a href="#">{{ i.project }}</a></td>
+<td class="sorting_1">{{ i.cost }}</td>
+<td class="sorting_1">{{ i.quantity }}</td>
+<td class="sorting_1">{{ i.total_cost }}</td>
+<td class="sorting_1">{{ i.last_updated }}</td>
+<td><a href="{% url 'project:expense_update'  i.id %}" class="btn btn-info btn-xs stopAjax"title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Detail"><span class="glyphicon glyphicon-list-alt"></span></a>
+<a href="{% url 'project:expense_delete' i.id %}" class="btn btn-danger btn-xs" onclick="functionName(event)" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+</td>
+</tr>
+{% endfor %}

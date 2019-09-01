@@ -1,0 +1,440 @@
+{% extends 'base_task.html' %}
+{% block content %}
+<div id="main-content">
+
+
+        <div class="white-area-content">
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="dashboard-window clearfix" style="background: #62acec; border-left: 5px solid #5798d1;">
+	<div class="d-w-icon">
+		<span class="glyphicon glyphicon-folder-close giant-white-icon"></span>
+	</div>
+	<div class="d-w-text">
+		 <span class="d-w-num">0</span><br>Your Projects	</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="dashboard-window clearfix" style="background: #5cb85c; border-left: 5px solid #4f9f4f;">
+	<div class="d-w-icon">
+		<span class="glyphicon glyphicon-tasks giant-white-icon"></span>
+	</div>
+	<div class="d-w-text">
+		 <span class="d-w-num">0</span><br>Your Tasks	</div>
+</div>
+</div>
+<div class="col-md-3">
+<div class="dashboard-window clearfix" style="background: #f0ad4e; border-left: 5px solid #d89b45;">
+	<div class="d-w-icon">
+		<span class="glyphicon glyphicon-time giant-white-icon"></span>
+	</div>
+	<div class="d-w-text">
+		 <span class="d-w-num">0</span><br>Time Logged	</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="dashboard-window clearfix" style="background: #d9534f; border-left: 5px solid #b94643;">
+	<div class="d-w-icon">
+		<span class="glyphicon glyphicon-user giant-white-icon"></span>
+	</div>
+	<div class="d-w-text">
+		 <span class="d-w-num">1</span><br>Online	</div>
+</div>
+</div>
+
+</div>
+
+<hr>
+
+<div class="row">
+<div class="col-md-9">
+<div class="block-area align-center"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;" src="./dasboard_files/saved_resource.html"></iframe>
+<h4 class="home-label">Finances</h4>
+<div class="finance-blob">
+<p class="finance-blob-unit">$<span id="num1">0.0</span></p>
+Total Annual Revenue </div>
+<div class="finance-blob">
+<p class="finance-blob-unit">$<span id="num2">0.00</span></p>
+Total Annual Expenses</div>
+<div class="finance-blob">
+<p class="finance-blob-unit">$<span id="num3">0.00</span></p>
+Total Annual Profit</div>
+<canvas id="myChart" class="graph-height" width="675" height="337" style="display: block; width: 675px; height: 337px;"></canvas>
+</div>
+
+<div class="content-separator block-area">
+<h4 class="home-label">Projects</h4>
+
+
+</div>
+
+
+
+
+<div class="content-separator block-area">
+<h4 class="home-label">Notifications</h4>
+<div class="table-responsive">
+<table class="table small-text table-bordered table-striped table-hover">
+<tbody><tr class="table-header"><td width="30">From</td><td>Title</td><td>Date</td><td>View</td></tr>
+</tbody></table>
+</div>
+</div>
+
+</div>
+<div class="col-md-3">
+<div class="panel panel-default">
+<div class="panel-body" id="scroll-window">
+
+<p><button type="button" class="btn btn-flat btn-xs btn-flat-active" id="tasks-btn" onclick="get_tasks()">Tasks</button> <button type="button" id="notes-btn" class="btn btn-flat btn-xs" onclick="get_notes()">Notes</button></p>
+
+<div id="ajax_tasks"><div class="task-blob">
+<table class="table">
+</table>
+<div class="align-center">
+<a href="http://titan.patchesoft.com/tasks" class="btn btn-primary btn-xs">Your Tasks</a>
+</div>
+</div></div>
+
+</div>
+</div>
+
+<div class="panel panel-default">
+<div class="panel-body">
+<h4 class="home-label">Overdue Tasks</h4>
+<table class="table">
+<thead>
+<tr>
+<th>Overdue</th>
+<th>Task</th>
+<th>Deadline</th>
+</tr>
+</thead>
+</table>
+</div>
+</div>
+
+<div class="panel panel-default">
+<div class="panel-body">
+<h4 class="home-label">Services</h4>
+<table class="table">
+<tbody><tr><td><a href="http://titan.patchesoft.com/services/view_service/1">Installation Service</a></td><td>$10.00</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="panel panel-default">
+<div class="panel-body" id="projectTypesChartArea"><iframe class="chartjs-hidden-iframe" tabindex="-1" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;" src="./dasboard_files/saved_resource(1).html"></iframe>
+<h4 class="home-label">Time By Project</h4>
+<canvas id="projectTypesChart" width="184" height="92" style="display: block; width: 184px; height: 92px;"></canvas>
+</div>
+</div>
+
+<div class="panel panel-default">
+<div class="panel-body" id="projectTypesChartArea">
+<h4 class="home-label">Recent Activity</h4>
+<table class="table">
+</table>
+</div>
+</div>
+
+</div>
+</div>
+
+
+</div>
+
+<script type="text/javascript">
+	var ctx = $("#myChart");
+	var data = {
+	    labels: ["", "", "", "", "", "", "", "", "", "", "", ""],
+	    datasets: [
+	    	{
+	            label: "Expenses",
+	            fill: true,
+	            lineTension: 0.2,
+	            backgroundColor: "rgba(32,113,210,0.4)",
+	            borderColor: "rgba(32,113,210,0.9)",
+	            borderCapStyle: 'butt',
+	            borderDash: [],
+	            borderDashOffset: 0.0,
+	            borderJoinStyle: 'miter',
+	            pointBorderColor: "rgba(75,192,192,1)",
+	            pointBackgroundColor: "#fff",
+	            pointBorderWidth: 1,
+	            pointHoverRadius: 5,
+	            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+	            pointHoverBorderColor: "rgba(220,220,220,1)",
+	            pointHoverBorderWidth: 2,
+	            pointRadius: 1,
+	            pointHitRadius: 10,
+	            data: [	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            ],
+	            spanGaps: false,
+	        },
+	        {
+	            label: "Income",
+	            fill: true,
+	            lineTension: 0.2,
+	            backgroundColor: "rgba(29,210,142,0.5)",
+	            borderColor: "rgba(29,210,142,0.9)",
+	            borderCapStyle: 'butt',
+	            borderDash: [],
+	            borderDashOffset: 0.0,
+	            borderJoinStyle: 'miter',
+	            pointBorderColor: "rgba(75,192,192,1)",
+	            pointBackgroundColor: "#fff",
+	            pointBorderWidth: 1,
+	            pointHoverRadius: 5,
+	            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+	            pointHoverBorderColor: "rgba(220,220,220,1)",
+	            pointHoverBorderWidth: 2,
+	            pointRadius: 1,
+	            pointHitRadius: 10,
+	            data: [	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            	            	0,
+	            ],
+	            spanGaps: false,
+	        },
+	    ]
+	};
+	Chart.defaults.global.defaultFontFamily = "'Open Sans'";
+	Chart.defaults.global.defaultFontSize = 8;
+	var options = { title : { text: "" }};
+	var myLineChart = new Chart(ctx, {
+	    type: 'line',
+	    data: data,
+	    options: {
+	    	defaultFontSize: 8,
+	    	responsive: true,
+	    	hover : {
+	    		mode : "single"
+	    	},
+	    	legend : {
+	    		display : false,
+	    		labels : {
+	    			boxWidth: 15,
+	    			padding: 10,
+	    			fontSize: 11,
+	    			usePointStyle : false
+	    		}
+	    	},
+	    	animation : {
+	    		duration: 2000,
+	    		easing: "easeOutElastic"
+	    	},
+	    	scales : {
+	    		yAxes : [{
+	    			display: true,
+	    			title : {
+	    				fontSize: 11
+	    			},
+	    			gridLines : {
+	    				display : true
+	    			}
+	    		}],
+	    		xAxes : [{
+	    			display : true,
+	    			scaleLabel : {
+	    				display : false
+	    			},
+	    			ticks : {
+	    				display : true
+	    			},
+	    			gridLines : {
+	    				display : true,
+	    				drawTicks : false,
+	    				tickMarkLength: 5,
+	    				zeroLineWidth: 0,
+	    			}
+	    		}]
+	    	}
+	    }
+	});
+
+	    var data = {
+    labels: [
+           ],
+    datasets: [
+        {
+            data: [
+                                    ],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#55f225",
+                "#f24c25",
+                "#f225b1",
+                "#8125f2",
+                "#39ded8",
+                "#4e7f39",
+                "#7f3941",
+                "#7f3965",
+                "#62397f",
+                "#39507f",
+                "#397f6f",
+                "#397f44",
+                "#607f39",
+                "#7f6c39",
+                "#7f3939",
+                "#321a20",
+                "#3c3a3c",
+                "#7e777d",
+                "#b5ba9e",
+                "#84d588",
+                "#84ced5",
+                "#2c57b9",
+                "#dbc6ec",
+                "#ecc6eb",
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#55f225",
+                "#f24c25",
+                "#f225b1",
+                "#8125f2",
+                "#39ded8",
+                "#4e7f39",
+                "#7f3941",
+                "#7f3965",
+                "#62397f",
+                "#39507f",
+                "#397f6f",
+                "#397f44",
+                "#607f39",
+                "#7f6c39",
+                "#7f3939",
+                "#321a20",
+                "#3c3a3c",
+                "#7e777d",
+                "#b5ba9e",
+                "#84d588",
+                "#84ced5",
+                "#2c57b9",
+                "#dbc6ec",
+                "#ecc6eb",
+            ]
+        }]
+};
+
+var myPieChart = new Chart($("#projectTypesChart"),{
+    type: 'pie',
+    data: data,
+    options : {
+    	responsive: true,
+    	legend : {
+	    		display : false,
+	    		labels : {
+	    			boxWidth: 15,
+	    			padding: 10,
+	    			fontSize: 11,
+	    			usePointStyle : false
+	    		}
+	    	},
+    }
+});
+
+	$(document).ready(function() {
+		var comma_separator_number_step = $.animateNumber.numberStepFactories.separator(',');
+		var decimal_places = 2;
+		$('#num1').animateNumber(
+		  {
+		    number: 0,
+		    easing: 'easeInQuad', // require jquery.easing
+		    numberStep: function(now, tween) {
+                var floored_number = now,
+                    target = $(tween.elem);
+
+                if (decimal_places > 0) {
+                  // force decimal places even if they are 0
+                  floored_number = floored_number.toFixed(decimal_places);
+
+                  // replace '.' separator with ','
+                  //floored_number = floored_number.toString().replace('.', ',');
+                }
+
+                target.text(floored_number);
+            }
+		  },
+		  1500
+		);
+		$('#num2').animateNumber(
+		  {
+		    number: 0,
+		    easing: 'easeInQuad', // require jquery.easing
+		    numberStep: function(now, tween) {
+                var floored_number = now,
+                    target = $(tween.elem);
+
+                if (decimal_places > 0) {
+                  // force decimal places even if they are 0
+                  floored_number = floored_number.toFixed(decimal_places);
+
+                  // replace '.' separator with ','
+                  //floored_number = floored_number.toString().replace('.', ',');
+                }
+
+                target.text(floored_number);
+            }
+		  },
+		  1500
+		);
+		$('#num3').animateNumber(
+		  {
+		    number: 0,
+		    easing: 'easeInQuad', // require jquery.easing
+		    numberStep: function(now, tween) {
+                var floored_number = now,
+                    target = $(tween.elem);
+
+                if (decimal_places > 0) {
+                  // force decimal places even if they are 0
+                  floored_number = floored_number.toFixed(decimal_places);
+
+                  // replace '.' separator with ','
+                  //floored_number = floored_number.toString().replace('.', ',');
+                }
+
+                target.text(floored_number);
+            }
+		  },
+		  1500
+		);
+
+					get_tasks();
+
+
+	});
+
+
+</script>
+    </div>
+
+{% endblock %}

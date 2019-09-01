@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+     {% load staticfiles %}
+{% block content %}
+   <div id="main-content" style="min-height: 698px;">
+       <div class="row">
+                        <div class="col-md-12">
+                                <div class="alert alert-success"><b><span class="glyphicon glyphicon-ok"></span></b> The task was added!</div>
+                        </div>
+                    </div>
+
+        <div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-tasks"></span> Tasks</div>
+    <div class="db-header-extra form-inline">
+    <div class="btn-group">
+<div class="dropdown">
+    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    View By Project <span class="caret"></span></button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <li><a href="http://titan.patchesoft.com/tasks/index">All Your Projects</a></li>
+        <li><a href="http://titan.patchesoft.com/tasks/index/8">Breakfast</a></li>
+  </ul>
+</div>
+</div>
+    <div class="form-group has-feedback no-margin">
+<div class="input-group">
+<input type="text" class="form-control input-sm" placeholder="Search ..." id="form-search-input">
+<div class="input-group-btn">
+    <input type="hidden" id="search_type" value="0">
+        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+        <ul class="dropdown-menu small-text" style="min-width: 90px !important; left: -90px;">
+          <li><a href="http://titan.patchesoft.com/tasks#" onclick="change_search(0)"><span class="glyphicon glyphicon-ok" id="search-like"></span> Like</a></li>
+          <li><a href="http://titan.patchesoft.com/tasks#" onclick="change_search(1)"><span class="glyphicon glyphicon-ok no-display" id="search-exact"></span> Exact Match</a></li>
+          <li><a href="http://titan.patchesoft.com/tasks#" onclick="change_search(2)"><span class="glyphicon glyphicon-ok no-display" id="title-exact"></span> Task Name</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+</div>
+</div>
+          <a href="http://titan.patchesoft.com/tasks/add?projectid=0" class="btn btn-primary btn-sm">Create New Task</a>
+    </div>
+</div>
+
+<div class="btn-group" role="group" aria-label="...">
+  <a href="http://titan.patchesoft.com/tasks/index/0/0" class="btn btn-default btn-sm">All Tasks</a>
+  <a href="http://titan.patchesoft.com/tasks/index/0/1" class="btn btn-info btn-sm">New</a>
+  <a href="http://titan.patchesoft.com/tasks/index/0/2" class="btn btn-primary btn-sm">In Progress</a>
+  <a href="http://titan.patchesoft.com/tasks/index/0/3" class="btn btn-success btn-sm">Completed</a>
+  <a href="http://titan.patchesoft.com/tasks/index/0/4" class="btn btn-warning btn-sm">On Hold</a>
+  <a href="http://titan.patchesoft.com/tasks/index/0/5" class="btn btn-danger btn-sm">Cancelled</a>
+</div>
+
+<hr>
+
+<div class="table-responsive">
+<div id="tasks-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+<div class="dt-buttons">
+<button class="dt-button buttons-copy buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="tasks-table"><span>Copy</span></button>
+<button class="dt-button buttons-csv buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="tasks-table"><span>CSV</span></button>
+ <button class="dt-button buttons-excel buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="tasks-table"><span>Excel</span></button>
+ <button class="dt-button buttons-pdf buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="tasks-table"><span>PDF</span></button>
+ <button class="dt-button buttons-print btn btn-default btn-sm" tabindex="0" aria-controls="tasks-table"><span>Print</span></button>
+ </div>
+ <div class="row">
+ <div class="col-sm-12">
+ <table id="tasks-table" class="table table-bordered table-striped table-hover dataTable no-footer" role="grid" aria-describedby="tasks-table_info" style="width: 951px;">
+<thead>
+<tr class="table-header" role="row"><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Task: activate to sort column ascending" style="width: 73px;">Task</td><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 102px;">Status</td><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending" style="width: 101px;">Project</td><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Completion: activate to sort column ascending" style="width: 151px;">Completion</td><td class="sorting_asc" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Due Date: activate to sort column descending" style="width: 173px;">Due Date</td><td class="sorting_disabled" rowspan="1" colspan="1" aria-label="Options" style="width: 140px;">Options</td></tr>
+</thead>
+<tbody>
+<tr role="row" class="odd"><td><a href="http://titan.patchesoft.com/tasks/view/13">ulrich</a></td><td><label class="label label-primary">In Progress</label></td><td><a href="http://titan.patchesoft.com/tasks/index/8/0">Breakfast</a></td><td><div class="progress" style="height: 15px;">
+					  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="0%">
+					    <span class="sr-only">0% Complete</span>
+					  </div>
+				</div></td><td class="sorting_1">24/08/2019 09:22</td><td><a href="http://titan.patchesoft.com/tasks/view/13" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-list-alt"></span></a> <a href="http://titan.patchesoft.com/tasks/edit_task/13" class="btn btn-warning btn-xs" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></a> <a href="http://titan.patchesoft.com/tasks/delete_task/13/bfdf0cfacdd85a09fce1df879a2ab98a" class="btn btn-danger btn-xs" onclick="return confirm(&#39;Are you sure you want to do this?&#39;)" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></a></td></tr></tbody>
+</table></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="tasks-table_info" role="status" aria-live="polite">Showing 1 to 1 of 1 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_full_numbers" id="tasks-table_paginate"><ul class="pagination"><li class="paginate_button first disabled" id="tasks-table_first"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="0" tabindex="0">First</a></li><li class="paginate_button previous disabled" id="tasks-table_previous"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="1" tabindex="0">Previous</a></li><li class="paginate_button active"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="2" tabindex="0">1</a></li><li class="paginate_button next disabled" id="tasks-table_next"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="3" tabindex="0">Next</a></li><li class="paginate_button last disabled" id="tasks-table_last"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="4" tabindex="0">Last</a></li></ul></div></div></div></div>
+</div>
+
+
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+
+   var st = $('#search_type').val();
+    var table = $('#tasks-table').DataTable({
+        "dom" : "B<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      "processing": false,
+        "pagingType" : "full_numbers",
+        "pageLength" : 15,
+        "serverSide": true,
+        "orderMulti": false,
+        buttons: [
+          { "extend": 'copy', "text":'Copy',"className": 'btn btn-default btn-sm' },
+          { "extend": 'csv', "text":'CSV',"className": 'btn btn-default btn-sm' },
+          { "extend": 'excel', "text":'Excel',"className": 'btn btn-default btn-sm' },
+          { "extend": 'pdf', "text":'PDF',"className": 'btn btn-default btn-sm' },
+          { "extend": 'print', "text":'Print',"className": 'btn btn-default btn-sm' }
+        ],
+        "order": [
+          [4, "asc" ]
+        ],
+        "columns": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        { "orderable": false }
+    ],
+        "ajax": {
+            url : "http://titan.patchesoft.com/tasks/tasks_page/index/0/0",
+            type : 'GET',
+            data : function ( d ) {
+                d.search_type = $('#search_type').val();
+            }
+        },
+        "drawCallback": function(settings, json) {
+        $('[data-toggle="tooltip"]').tooltip();
+      }
+    });
+    $('#form-search-input').on('keyup change', function () {
+    table.search(this.value).draw();
+});
+
+} );
+function change_search(search)
+    {
+      var options = [
+        "search-like",
+        "search-exact",
+        "title-exact",
+      ];
+      set_search_icon(options[search], options);
+        $('#search_type').val(search);
+        $( "#form-search-input" ).trigger( "change" );
+    }
+
+function set_search_icon(icon, options)
+    {
+      for(var i = 0; i<options.length;i++) {
+        if(options[i] == icon) {
+          $('#' + icon).fadeIn(10);
+        } else {
+          $('#' + options[i]).fadeOut(10);
+        }
+      }
+    }
+</script>
+</div>
+{% endblock %}

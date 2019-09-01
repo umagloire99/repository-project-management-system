@@ -1,0 +1,38 @@
+       {% load staticfiles %}
+
+  <form  class="form-horizontal create-form" method="post" data-url="{% url 'project:objective_create' t.id %}" accept-charset="utf-8">                                                                                                    <input type="hidden" name="csrf_test_name" value="8b3909d7d987f69f7cd0ccc630e4180d">
+      {% csrf_token %}
+      <input type="hidden" name="obj_id" value="{{ obj.id }}">
+     <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Objective Title</label>
+         <div class="col-md-8 ui-front">
+         <input type="text" class="form-control" name="title" value="{{ obj.title }}">
+         </div>
+     </div>
+     <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Objective Outline</label>
+         <div class="col-md-8 ui-front">
+    <textarea cols="40" rows="10" name="outline">{{ obj.outline }}</textarea>
+             </div>
+     </div>
+     <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Assign Users</label>
+         <div class="col-md-8 ui-front">
+         {% for m in t.member.all %}
+         <div class="task-objective-user">
+         <img src="{% static 'images/user.png' %}" class="user-icon">
+         <a href="#">{{ m.first_name }} {{ m.last_name }}</a>
+         {% if m in obj.user.all %}
+         <input type="checkbox" name="{{ m }}" value="1" checked>
+         {% else %}
+         <input type="checkbox" name="{{ m }}" value="0">
+         {% endif %}
+         </div>
+         {% endfor %}
+         </div>
+      </div>
+  <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="update Objective">
+              </div>
+  </form>

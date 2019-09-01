@@ -1,0 +1,13 @@
+{% for file in file %}
+<tr role="row" >
+<td class="sorting_1"><a href="#">{{ file.file_name }}</a></td>
+<td class="sorting_1"><a href="#">{{ file.project.name }}</a></td>
+<td class="sorting_1">{{ file.upload_file.size }}</td>
+<td class="sorting_1">{{ file.types }}</td>
+<td class="sorting_1">{{ file.user }}</td>
+<td><a href="{% url 'project:file_detail' file.id %}" class="btn btn-info btn-xs stopAjax"title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Detail"><span class="glyphicon glyphicon-list-alt"></span></a>
+<button class="btn btn-warning btn-xs show-form" data-url="{% url 'project:file_update' file.id %}" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></button>
+<a href="{% url 'project:file_delete' file.id %}" class="btn btn-danger btn-xs" onclick="functionName(event)" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+</td>
+</tr>
+{% endfor %}

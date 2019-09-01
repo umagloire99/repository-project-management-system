@@ -1,0 +1,140 @@
+{% extends 'base_task.html' %}
+     {% load staticfiles %}
+
+{% block content %}
+   <div id="main-content" style="min-height: 698px;">
+<div class="row">
+     <div class="col-md-12">
+     <div id="message" class="alert alert-success hide"><b><span class="glyphicon glyphicon-ok"></span></b></div>
+      </div>
+</div>
+
+        <div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-tasks"></span> Tasks</div>
+    <div class="db-header-extra form-inline">
+    <div class="btn-group">
+<div class="dropdown">
+    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    View By Project <span class="caret"></span></button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+  <li><a href="{% url 'project:task' %}">All Your Projects</a></li>
+  {% for p in project %}
+        <li><a href="{% url 'project:task_project' p.id %}">{{ p.name }}</a></li>
+  {% endfor %}
+  </ul>
+</div>
+</div>
+    <div class="form-group has-feedback no-margin">
+<div class="input-group">
+<input type="text" class="form-control input-sm" placeholder="Search ..." id="form-search-input">
+<div class="input-group-btn">
+    <input type="hidden" id="search_type" value="0">
+        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+      </div><!-- /btn-group -->
+</div>
+</div>
+          <button class="btn btn-primary btn-sm show-form" data-url="{% url 'project:task_create' %}">Create New Task</button>
+    </div>
+</div>
+
+<div class="btn-group" role="group" aria-label="...">
+  <a href="{% url 'project:task_state' id 'all' %}" class="btn btn-default btn-sm">All Tasks</a>
+  <a href="{% url 'project:task_state' id 'New' %}" class="btn btn-info btn-sm">New</a>
+  <a href="{% url 'project:task_state' id 'In Progress' %}" class="btn btn-primary btn-sm">In Progress</a>
+  <a href="{% url 'project:task_state' id 'Completed' %}" class="btn btn-success btn-sm">Completed</a>
+  <a href="{% url 'project:task_state' id 'On Hold' %}" class="btn btn-warning btn-sm">On Hold</a>
+  <a href="{% url 'project:task_state' id 'Cancelled' %}" class="btn btn-danger btn-sm">Cancelled</a>
+</div>
+
+<hr>
+
+<div class="table-responsive">
+<div id="tasks-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+<div class="dt-buttons">
+<button class="dt-button buttons-csv buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="projects-table" onclick="exportCSV('task.csv')"><span>CSV</span></button>
+<button class="dt-button buttons-excel buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="projects-table"onclick="exportTableToExcel('task.xls')"><span>Excel</span></button>
+<button class="dt-button buttons-pdf buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="projects-table" onclick="ExportPdf('task.pdf')"><span>PDF</span></button>
+</div>
+ <div class="row">
+ <div class="col-sm-12">
+ <table id="projects-table" class="table table-bordered table-striped table-hover dataTable no-footer" role="grid" aria-describedby="tasks-table_info" style="width: 951px;">
+<thead>
+<tr class="table-header" role="row"><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Task: activate to sort column ascending" style="width: 73px;">Task</td><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 102px;">Status</td><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending" style="width: 101px;">Project</td><td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-label="Completion: activate to sort column ascending" style="width: 151px;">Completion</td><td class="sorting_asc" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Due Date: activate to sort column descending" style="width: 173px;">Due Date</td><td class="sorting_disabled" rowspan="1" colspan="1" aria-label="Options" style="width: 140px;">Options</td></tr>
+</thead>
+<tbody>
+{% include 'tasks/taskList.html' %}
+</tbody>
+</table></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="tasks-table_info" role="status" aria-live="polite">Showing 1 to 1 of 1 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_full_numbers" id="tasks-table_paginate"><ul class="pagination"><li class="paginate_button first disabled" id="tasks-table_first"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="0" tabindex="0">First</a></li><li class="paginate_button previous disabled" id="tasks-table_previous"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="1" tabindex="0">Previous</a></li><li class="paginate_button active"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="2" tabindex="0">1</a></li><li class="paginate_button next disabled" id="tasks-table_next"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="3" tabindex="0">Next</a></li><li class="paginate_button last disabled" id="tasks-table_last"><a href="http://titan.patchesoft.com/tasks#" aria-controls="tasks-table" data-dt-idx="4" tabindex="0">Last</a></li></ul></div></div></div></div>
+</div>
+
+
+</div>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-tasks"></span> Task</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+<link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css">
+<script>
+$(document).ready(function() {
+    var showForm = function() {
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+        $('#addModal').modal('show');
+      },
+      success: function(data) {
+          console.log('yes na me this');
+        $('#addModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+  var saveForm = function() {
+  var form = $(this);
+  var formData = new FormData(form[0])
+  $.ajax({
+  url: form.attr('data-url'),
+  data: formData,
+  type: form.attr('method'),
+  dataType: 'json',
+  async:true,
+  cache:false,
+  contentType: false,
+  enctype:form.attr("enctype"),
+  processData: false,
+  success: function(data) {
+    if (data.form_is_valid){
+        $('#projects-table tbody').html(data.project_task);
+        $('#addModal').modal('hide');
+        $('#message').addClass('show');
+        $('#message').text(data.sms)
+    }
+    else {
+       $('#addModal .modal-body').html(data.html_form)
+    }
+  },
+
+  });
+  		return false;
+};
+$(".show-form").click(showForm);
+$("#addModal").on("submit",".create-form",saveForm);
+
+})
+
+</script>
+{% endblock %}

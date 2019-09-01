@@ -1,0 +1,145 @@
+{% extends 'base_task.html' %}
+     {% load staticfiles %}
+
+{% block content %}
+<div id="main-content" style="min-height: 634px;">
+<div class="row">
+     <div class="col-md-12">
+     <div id="message" class="alert alert-success hide"><b><span class="glyphicon glyphicon-ok"></span></b></div>
+      </div>
+     </div>
+
+        <div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-folder-open"></span>Projects</div>
+    <div class="db-header-extra form-inline">
+
+      <div class="form-group has-feedback no-margin">
+<div class="input-group">
+<input type="text" class="form-control input-sm" onkeyup="myFunction()" placeholder="Search ..." id="search-input">
+<div class="input-group-btn">
+    <input type="hidden"  value="0">
+        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+      </div>
+</div>
+</div>
+
+   <button class="btn btn-primary btn-sm show-form" data-url="{% url 'project:create' %}">Add New Project</button>
+   </div>
+</div>
+
+<a href="{% url 'project:project' %}" class="btn btn-round btn-sm" style="{{ all }}">All Projects</a>
+<a href="{% url 'project:category' 'In Progress'  %}" class="btn btn-round btn-sm" style="{{ progress }}">In Progress</a>
+<a href="{% url 'project:category' 'Completed'  %}" class="btn btn-round btn-sm" style="{{ complete }}">Completed</a>
+<a href="{% url 'project:category' 'Cancelled'  %}" class="btn btn-round btn-sm" style="{{ cancel }}">Cancelled</a>
+
+<hr>
+
+<div class="table-responsive">
+<div id="projects-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+<div class="dt-buttons">
+<button class="dt-button buttons-csv buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="projects-table" onclick="exportCSV('project.csv')"><span>CSV</span></button>
+<button class="dt-button buttons-excel buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="projects-table"onclick="exportTableToExcel('project.xls')"><span>Excel</span></button>
+<button class="dt-button buttons-pdf buttons-html5 btn btn-default btn-sm" tabindex="0" aria-controls="projects-table" onclick="ExportPdf('project.pdf')"><span>PDF</span></button>
+</div>
+<table id="projects-table" class="table table-bordered table-striped table-hover dataTable no-footer" role="grid" aria-describedby="projects-table_info" style="width: 951px;">
+<thead>
+<tr class="table-header" role="row"><td width="50" class="sorting_disabled" rowspan="1" colspan="1" style="width: 50px;" aria-label="Icon">Icon</td><td class="sorting" tabindex="0" aria-controls="projects-table" rowspan="1" colspan="1" style="width: 209px;" aria-label="Project Name: activate to sort column ascending">Project Name</td><td class="sorting" tabindex="0" aria-controls="projects-table" rowspan="1" colspan="1" style="width: 150px;" aria-label="Category: activate to sort column ascending">Category</td><td class="sorting" tabindex="0" aria-controls="projects-table" rowspan="1" colspan="1" style="width: 147px;" aria-label="Progress: activate to sort column ascending">Progress</td><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 87px;" aria-label="Team">Start Date</td><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 87px;" aria-label="Team">End Date</td><td class="sorting_disabled" rowspan="1" colspan="1" style="width: 141px;" aria-label="Options">Options</td></tr>
+</thead>
+<tbody id="tbd">
+{% include 'project/ProjectList.html' %}
+</tbody>
+</table></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="projects-table_info" role="status" aria-live="polite">Showing 1 to 1 of 1 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_full_numbers" id="projects-table_paginate"><ul class="pagination"><li class="paginate_button first disabled" id="projects-table_first"><a href="http://titan.patchesoft.com/projects#" aria-controls="projects-table" data-dt-idx="0" tabindex="0">First</a></li><li class="paginate_button previous disabled" id="projects-table_previous"><a href="http://titan.patchesoft.com/projects#" aria-controls="projects-table" data-dt-idx="1" tabindex="0">Previous</a></li><li class="paginate_button active"><a href="http://titan.patchesoft.com/projects#" aria-controls="projects-table" data-dt-idx="2" tabindex="0">1</a></li><li class="paginate_button next disabled" id="projects-table_next"><a href="http://titan.patchesoft.com/projects#" aria-controls="projects-table" data-dt-idx="3" tabindex="0">Next</a></li><li class="paginate_button last disabled" id="projects-table_last"><a href="http://titan.patchesoft.com/projects#" aria-controls="projects-table" data-dt-idx="4" tabindex="0">Last</a></li></ul></div></div></div></div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-folder-open"></span> Project</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+
+ <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search-input");
+  filter = input.value.toUpperCase();
+  table = document.getElementById('tbd');
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+        console.log(td);
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+};
+$(document).ready(function() {
+    var showForm = function() {
+        console.log("what the fuck")
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+          console.log('yes am the only one')
+        $('#addModal').modal('show');
+      },
+      success: function(data) {
+          console.log('yes na me this');
+        $('#addModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+  var saveForm = function() {
+  var form = $(this);
+  var formData = new FormData(form[0])
+  $.ajax({
+  url: form.attr('data-url'),
+  data: formData,
+  type: form.attr('method'),
+  dataType: 'json',
+  async:true,
+  cache:false,
+  contentType: false,
+  enctype:form.attr("enctype"),
+  processData: false,
+  success: function(data) {
+    if (data.form_is_valid){
+        $('#projects-table tbody').html(data.project_list);
+        $('#addModal').modal('hide');
+        $('#message').addClass('show');
+        $('#message').text(data.sms)
+    }
+    else {
+       $('#addModal .modal-body').html(data.html_form)
+    }
+  },
+
+  });
+  		return false;
+};
+$(".show-form").click(showForm);
+$("#addModal").on("submit",".create-form",saveForm);
+
+})
+
+</script>
+{% endblock %}

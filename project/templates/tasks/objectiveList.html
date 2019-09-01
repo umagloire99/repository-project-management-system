@@ -1,0 +1,26 @@
+		     {% load staticfiles %}
+
+			{% for obj in obj %}
+			<div class="pull-right">
+			  {% if obj.complete is False %}
+               <a href="{% url 'project:objective_complete' obj.id %}" class="btn btn-success btn-xs">Mark Complete</a>
+       		  {% endif %}
+        			<button type="button" class="btn btn-warning btn-xs objective-form stopAjax" data-url="{% url 'project:objective_update' obj.id %}" >Edit</button>
+        			<a href="{% url 'project:objective_delete' obj.id %}" class="btn btn-danger btn-xs" onclick="functionName(event)">Delete</a>
+      	     </div>
+			<h4/>{{ obj.title }} {% if obj.complete is True %}<span class='completeText'> <span class='glyphicon glyphicon-ok'></span> COMPLETED</span>{% endif %}</h4>
+			<p class="small-text"></p>
+			<p>{{ obj.outline }}</p>
+              <p></p>
+						<div class="task-objective-user"><b>Assigned Users:</b></div>
+			{% for u in obj.user.all %}
+			<div class="task-objective-user">
+               <div class="user-box-avatar">
+                <div class="online-dot-user" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Online"></div>
+                <a href="#"><img src="{% static 'images/user.png' %}" title="" data-toggle="tooltip" data-placement="right" data-original-title="{{ u }}"></a>
+                </div>{{ u }}
+            </div>
+            {% endfor %}
+						<p></p>
+			<hr>
+			{% endfor %}

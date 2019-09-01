@@ -1,0 +1,34 @@
+       {% load staticfiles %}
+
+  <form  class="form-horizontal create-form" method="post" data-url="{% url 'project:objective_create' t.id %}" accept-charset="utf-8">
+      {% csrf_token %}
+     <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Objective Title</label>
+         <div class="col-md-8 ui-front">
+         <input type="text" class="form-control" name="title" va>
+         </div>
+     </div>
+     <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Objective Outline</label>
+         <div class="col-md-8 ui-front">
+    <textarea cols="40" rows="10" name="outline"></textarea>
+             </div>
+     </div>
+     <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Assign Users</label>
+         <div class="col-md-8 ui-front">
+         {% for m in t.member.all %}
+         <div class="task-objective-user">
+         <img src="{% static 'images/user.png' %}" class="user-icon">
+         <a href="#">{{ m.first_name }} {{ m.last_name }}</a>
+         <input type="checkbox" name="{{ m }}" value="1">
+         </div>
+         {% endfor %}
+         </div>
+    </div>
+  <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Add Objective">
+              </div>
+  </form>
+

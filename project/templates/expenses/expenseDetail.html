@@ -1,0 +1,30 @@
+  {% extends 'base_task.html' %}
+{% block content %}
+  <div id="main-content" style="min-height: 634px;">
+    {% if messages %}
+{% for message in messages %}
+<div class="row">
+     <div class="col-md-12">
+     <div class="alert {{ message.tags }}">{{ message }}</div>
+      </div>
+</div>
+{% endfor %}
+{% endif %}
+        <div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-stats"></span> Resources</div>
+    <div class="db-header-extra form-inline">
+      <a href="#" class="btn btn-primary btn-sm">Add Resource</a>
+</div>
+</div>
+
+<div class="panel panel-default">
+<div class="panel-body">
+{% include 'expenses/expense_edit.html' %}
+</div>
+</div>
+
+
+</div></div>
+{% endblock %}

@@ -1,0 +1,358 @@
+{% if isAjax == False %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>PMSR</title>
+     {% load staticfiles %}
+         <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css">
+
+        <link href="{% static 'css/elements.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/css' %}" rel="stylesheet" type="text/css">
+       <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,500,550,600,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+
+        <!-- SCRIPTS -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-header2">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                    <a class="navbar-brand-two" href="http://titan.patchesoft.com/" title="TITAN"><img src="{% static 'images/logo.png' %}" width="150px" height="35px"></a>
+                </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+                                              <li><a href="http://titan.patchesoft.com/#" data-target="#" onclick="load_timers()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="timer-menu-drop"><span class="glyphicon glyphicon-time notification-icon"></span><span class="badge timer-badge small-text" id="timer-count" style="display: none;">0</span></a>
+
+            <ul class="dropdown-menu" aria-labelledby="time-menu-drop" id="time-menu-drop">
+            <li>
+            <div class="notification-box-title">
+            Timers <input type="button" class="btn btn-primary btn-xs" value="Start Timer" id="start_timer_button" onclick="start_timer()">
+            </div>
+            <div id="timer-scroll">
+              <div id="loading_spinner_timer">
+                <span class="glyphicon glyphicon-refresh" id="ajspinner_timer"></span>
+              </div>
+            </div>
+            <div class="notification-box-footer">
+            <a href="http://titan.patchesoft.com/time">Your Timers</a>
+            </div>
+          </li>
+          </ul>
+          </li>
+                    <li><a href="http://titan.patchesoft.com/#" data-target="#" onclick="load_notifications()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="noti-menu-drop"><span class="glyphicon glyphicon-bell notification-icon"></span></a>
+
+            <ul class="dropdown-menu" aria-labelledby="noti-menu-drop">
+            <li>
+            <div class="notification-box-title">
+            Notifications             </div>
+            <div id="notifications-scroll">
+              <div id="loading_spinner_notification">
+                <span class="glyphicon glyphicon-refresh" id="ajspinner_notification"></span>
+              </div>
+            </div>
+            <div class="notification-box-footer">
+            <a href="http://titan.patchesoft.com/home/notifications">Read More</a>
+            </div>
+          </li>
+          </ul>
+          </li>
+            <li><a href="http://titan.patchesoft.com/#" data-target="#" onclick="load_emails()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="email-menu-drop"><span class="glyphicon glyphicon-envelope notification-icon"></span></a>
+
+            <ul class="dropdown-menu" aria-labelledby="email-menu-drop">
+            <li>
+              <div class="notification-box-title">
+                Messages                 </div>
+                <div id="email-scroll">
+                  <div id="loading_spinner_email">
+                    <span class="glyphicon glyphicon-refresh" id="ajspinner_email"></span>
+                  </div>
+                </div>
+                <div class="notification-box-footer">
+                <a href="http://titan.patchesoft.com/mail">Go To Mailbox</a>
+              </div>
+            </li>
+            </ul>
+
+            </li>
+            <li class="user_bit"><img src="{% static 'images/user.png' %}" class="user_avatar"> <a href="http://titan.patchesoft.com/user_settings">uhack</a></li>
+            <li><a href="http://titan.patchesoft.com/login/logout/3189e8620829d7da839e5c193d0cdf66">Logout</a></li>
+                    </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar">
+                <ul class="newnav nav nav-sidebar">
+                       <li class="{{ dashboard }}"><a href="#"><span class="glyphicon glyphicon-home sidebar-icon sidebar-icon-blue"></span> Dashboard <span class="sr-only"></span></a></li>
+                        <li id="projects_links">
+                <a data-toggle="collapse" data-parent="#projects_links" href="#projects_links_c" class="collapsed {{ project }}">
+                  <span class="glyphicon glyphicon-folder-open sidebar-icon sidebar-icon-green"></span> Projects                  <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                </a>
+                <div id="projects_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                  <ul class="inner-sidebar-links">
+                    <li class=""><a href="{% url 'project:project' %}" class="stopAjax"> Your Projects</a></li>
+                                      </ul>
+                </div>
+            </li>
+                                    <li id="calendar_links">
+                  <a data-toggle="collapse" data-parent="#calendar_links" href="#calendar_links_c" class="collapsed ">
+                    <span class="glyphicon glyphicon-calendar sidebar-icon sidebar-icon-orange"></span> Calendar                    <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="calendar_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                      <li class=""><a href="http://titan.patchesoft.com/calendar"> Your Events</a></li>
+                                           </ul>
+                  </div>
+              </li>
+                                      <li id="task_links">
+                  <a data-toggle="collapse" data-parent="#task_links"  href="#task_links_c" class="collapsed {{ tasks }}{{ tasks_a }}">
+                    <span class="glyphicon glyphicon-tasks sidebar-icon sidebar-icon-pink"></span> Tasks                    <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="task_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                                          <li class="{{ tasks }}"><a href="{% url 'project:task' %}" class="stopAjax"> Your Project Tasks</a></li>
+                      <li class="{{ tasks_a }}"><a href="{% url 'project:task_assigned' %}" class="stopAjax" > Your Assigned Tasks</a></li>
+                                                                                    </ul>
+                  </div>
+              </li>
+                                      <li id="file_links">
+                  <a data-toggle="collapse" data-parent="#file_links" href="#file_links_c" class="collapsed {{ files }}">
+                    <span class="glyphicon glyphicon-file sidebar-icon sidebar-icon-brown"></span> File Manager                    <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="file_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                      <li class="{{ files }}"><a href="{% url 'project:file' %}"  class="stopAjax"> Your Project Files</a></li>
+                                          </ul>
+                  </div>
+              </li>
+                                      <li id="stock_links">
+                  <a data-toggle="collapse" data-parent="#stock_links" href="#stock_links_c" class="collapsed {{ expenses }}">
+                    <span class="glyphicon glyphicon-stats sidebar-icon sidebar-icon-blue"></span> Resources <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="stock_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                                            <li class="{{ expenses }}"><a href="{% url 'project:expense' %}" class="stopAjax">Your Resources</a></li>
+                    </ul>
+                  </div>
+              </li>
+                                      <li id="team_links">
+                  <a data-toggle="collapse" data-parent="#team_links" href="#team_links_c" class="collapsed {{ teams }}">
+                    <span class="glyphicon glyphicon-user sidebar-icon sidebar-icon-red"></span> Team &amp; Users                    <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="team_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                      <li class=""><a href="{% url 'project:team' %}" class="{{ teams }} stopAjax"> Your Team</a></li>
+                                            <li class=""><a href="http://titan.patchesoft.com/team/clients"> Clients</a></li>
+                    </ul>
+                  </div>
+              </li>
+
+                                                  <li id="notes_links">
+                  <a data-toggle="collapse" data-parent="#notes_links" href="http://titan.patchesoft.com/#notes_links_c" class="collapsed ">
+                    <span class="glyphicon glyphicon-pencil sidebar-icon sidebar-icon-brown"></span> Notes                    <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="notes_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                                          <li class=""><a href="http://titan.patchesoft.com/notes/your"> Project Notes</a></li>
+                      <li class=""><a href="http://titan.patchesoft.com/notes/personal"> Personal</a></li>
+                    </ul>
+                  </div>
+              </li>
+
+                                                              <li id="quote_links">
+                  <a data-toggle="collapse" data-parent="#reports_links" href="http://titan.patchesoft.com/#reports_links_c" class="collapsed ">
+                    <span class="glyphicon glyphicon-list-alt sidebar-icon sidebar-icon-green"></span> Reports                    <span class="plus-sidebar"><span class="glyphicon glyphicon-menu-right"></span></span>
+                  </a>
+                  <div id="reports_links_c" class="panel-collapse collapse sidebar-links-inner ">
+                    <ul class="inner-sidebar-links">
+                      <li class=""><a href="http://titan.patchesoft.com/reports"> Tickets Reports</a></li>
+                                              <li class=""><a href="http://titan.patchesoft.com/reports/time"> Time Reports</a></li>
+                                            <li class=""><a href="http://titan.patchesoft.com/reports/finance"> Finance Reports</a></li>
+                      <li class=""><a href="http://titan.patchesoft.com/reports/invoices"> Invoices Reports</a></li>
+                    </ul>
+                  </div>
+              </li>
+
+            <li class=""><a href=#><span class="glyphicon glyphicon-cog sidebar-icon sidebar-icon-orange"></span> Settings</a></li>
+
+
+          </ul>    </div>
+
+ <div id="toufiqElahy">
+{% endif %}
+{% block content %}
+{% endblock %}
+{% if isAjax == False %}
+</div>
+<div id="footer" class="clearfix">
+      <span class="pull-left">Made By <a href="#">TannapTech</a> PMSR</span> <span class="pull-right"><a href="http://titan.patchesoft.com/home/change_language">Change Language</a></span>
+</div>
+    <!-- SCRIPTS -->
+        <script src="{% static 'js/global.js' %}"></script>
+    <script src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>     <script src="{% static 'table2excel.js' %}"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'js/SPA/toufiqElahySPA.css' %}"/>
+<script src="{% static 'js/SPA/toufiqElahySPA.js' %}"></script>
+
+<script>
+  $(function(){
+    $('#toufiqElahy').toufiqSPA();
+  })
+ </script>
+         <script type="text/javascript">
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search-input");
+  filter = input.value.toUpperCase();
+  table = document.getElementById('tbd');
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+        console.log(td);
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+};
+         function functionName(event) {
+  if(confirm('do you really want to delete this?')==false){
+			event.stopPropagation();	//it will prevent the further event bidings
+			event.preventDefault();		//and it will prevent using this plugin's ajax method
+		}
+}
+    function exportTableToExcel(filename) {
+            $("#projects-table").table2excel({
+                filename: filename
+            });
+        }
+    function download_csv(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV FILE
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // We have to create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Make sure that the link is not displayed
+    downloadLink.style.display = "none";
+
+    // Add the link to your DOM
+    document.body.appendChild(downloadLink);
+
+    // Lanzamos
+    downloadLink.click();
+}
+     function exportCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        for (var j = 0; j < cols.length; j++)
+            row.push(cols[j].innerText);
+
+        csv.push(row.join(","));
+    }
+
+    // Download CSV file
+    download_csv(csv.join("\n"), filename);
+}
+     function ExportPdf(filename) {
+            html2canvas(document.getElementById('projects-table'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download(filename);
+                }
+            });
+        };
+            $(document).ready(function() {
+              $('[data-toggle="tooltip"]').tooltip();
+            });
+
+            $.fn.modal.Constructor.prototype.enforceFocus = function () {
+    var $modalElement = this.$element;
+    $(document).on('focusin.modal', function (e) {
+        var $parent = $(e.target.parentNode);
+        if ($modalElement[0] !== e.target && !$modalElement.has(e.target).length
+            // add whatever conditions you need here:
+            &&
+            !$parent.hasClass('cke_dialog_ui_input_select') && !$parent.hasClass('cke_dialog_ui_input_text')) {
+            $modalElement.focus()
+        }
+    })
+};
+        </script>
+
+    <script type="text/javascript">
+     $(document).ready(function() {
+
+        $('.nav-sidebar li').on('shown.bs.collapse', function () {
+           $(this).find(".glyphicon-menu-right")
+                 .removeClass("glyphicon-menu-right")
+                 .addClass("glyphicon-menu-down");
+            resize_layout();
+        });
+        $('.nav-sidebar li').on('hidden.bs.collapse', function () {
+           $(this).find(".glyphicon-menu-down")
+                 .removeClass("glyphicon-menu-down")
+                 .addClass("glyphicon-menu-right");
+            resize_layout();
+        });
+
+        function resize_layout()
+        {
+          var sb_h = $('.sidebar').height();
+          var mc_h = $('#main-content').height();
+          var w_h = $(window).height();
+          if(sb_h > mc_h) {
+            $('#main-content').css("min-height", sb_h+50 + "px");
+          }
+          if(w_h > mc_h) {
+            $('#main-content').css("min-height", (w_h-(51+30)) +"px");
+          }
+        }
+     });
+    </script>
+</body>
+</html>
+{% endif %}
+
+

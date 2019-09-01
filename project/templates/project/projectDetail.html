@@ -1,0 +1,340 @@
+{% extends 'base_task.html' %}
+     {% load staticfiles %}
+{% block content %}
+    <div id="main-content">
+
+        <div class="white-area-content">
+
+<div class="db-header no-margin-bottom clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-folder-open"></span> Project Overview</div>
+    <div class="db-header-extra form-inline">
+
+</div>
+</div>
+
+</div>
+
+
+<div class="row content-separator">
+<div class="col-md-8">
+
+<div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-simple-title">{{ p.name }}</div>
+    <div class="db-header-extra form-inline">
+               <button class="btn btn-round btn-sm show-form" data-url="{% url 'project:update' p.id %}" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></button>
+               <button class="btn btn-round btn-sm show-form" data-url="{% url 'project:delete' p.id %}" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></button>
+</div>
+</div>
+
+{{ p.description|safe }}
+<hr>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ p.startDate }}</p>
+<p class="project-info-title">Start Date</p>
+</div>
+<div class="project-info project-block">
+<p class="project-info-bit">{{ p.endDate }}</p>
+<p class="project-info-title">End Date</p>
+</div>
+<div class="project-info project-block">
+<p class="project-info-bit">{{ p.category }}</p>
+<p class="project-info-title">Category</p>
+</div>
+
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ team.count }}</p>
+<p class="project-info-title">Members</p>
+</div>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ total_task }}</p>
+<p class="project-info-title">Tasks</p>
+</div>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ p.progressbar }}%</p>
+<p class="project-info-title">Progress</p>
+</div>
+
+<div class="project-info project-block">
+<p class="project-info-bit">{{ p.days }}</p>
+<p class="project-info-title">Days Clocked</p>
+</div>
+
+</div>
+
+<div class="white-area-content content-separator">
+    <div class="db-header clearfix">
+        <div class="page-header-simple-title">Overdue Tasks</div>
+        <div class="db-header-extra form-inline">
+              <a href="#" class="btn btn-round btn-sm"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+    </div>
+<div class="table-responsive">
+<div id="tasks-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="row"><div class="col-sm-12"><table id="tasks-table" class="table table-bordered table-striped table-hover dataTable no-footer" role="grid" aria-describedby="tasks-table_info" style="width: 612px;">
+<thead>
+<tr class="table-header" role="row">
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 42px;" aria-label="Task: activate to sort column ascending">Task</td>
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 56px;" aria-label="Status: activate to sort column ascending">Status</td>
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 62px;" aria-label="Project: activate to sort column ascending">Start Date</td>
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 99px;" aria-label="Completion: activate to sort column ascending">Workload</td>
+<td class="sorting_asc" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 80px;" aria-sort="ascending" aria-label="Due Date: activate to sort column descending">Due Date</td>
+<td class="sorting_disabled" rowspan="1" colspan="1" style="width: 67px;" aria-label="Options">Options</td></tr>
+</thead>
+<tbody class="small-text">
+{% if overdue %}
+{% for overdue in overdue %}
+<tr role="row" class="odd">
+<td><a href="#">{{ overdue.name }}</a></td>
+<td><label class="label label-primary">{{ overdue.types }}</label></td>
+<td><a href="#">{{ overdue.start_date }}</a></td>
+<td><div class="progress" style="height: 15px;">
+	<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{ overdue.progressbar }}%" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="0%">
+	<span class="sr-only">{{ overdue.progressbar }}% Complete</span>
+	</div></div></td>
+	<td class="sorting_1">{{ overdue.due_date }}</td>
+	<td><a href="#" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-list-alt"></span></a>
+	<a href="#" class="btn btn-warning btn-xs" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></a>
+	<a href="#" class="btn btn-danger btn-xs"  title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+	</td></tr>
+	{% endfor %}
+{% else %}
+<tr class="odd"><td valign="top" colspan="6" class="dataTables_empty">No data available in table</td></tr></tbody>
+{% endif %}
+</table></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="tasks-table_info" role="status" aria-live="polite">Showing 0 to 0 of 0 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_full_numbers" id="tasks-table_paginate"><ul class="pagination"><li class="paginate_button first disabled" id="tasks-table_first"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="0" tabindex="0">First</a></li><li class="paginate_button previous disabled" id="tasks-table_previous"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="1" tabindex="0">Previous</a></li><li class="paginate_button next disabled" id="tasks-table_next"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="2" tabindex="0">Next</a></li><li class="paginate_button last disabled" id="tasks-table_last"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="3" tabindex="0">Last</a></li></ul></div></div></div></div>
+</div>
+
+</div>
+
+<div class="white-area-content content-separator">
+    <div class="db-header clearfix">
+        <div class="page-header-simple-title">Upcoming Tasks</div>
+        <div class="db-header-extra form-inline">
+              <a href="http://titan.patchesoft.com/tasks/add" class="btn btn-round btn-sm"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+    </div>
+
+
+<div class="table-responsive">
+<div id="tasks-table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer"><div class="row"><div class="col-sm-12"><table id="tasks-table" class="table table-bordered table-striped table-hover dataTable no-footer" role="grid" aria-describedby="tasks-table_info" style="width: 612px;">
+<thead>
+<tr class="table-header" role="row">
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 42px;" aria-label="Task: activate to sort column ascending">Task</td>
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 56px;" aria-label="Status: activate to sort column ascending">Status</td>
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 62px;" aria-label="Project: activate to sort column ascending">Start Date</td>
+<td class="sorting" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 99px;" aria-label="Completion: activate to sort column ascending">Workload</td>
+<td class="sorting_asc" tabindex="0" aria-controls="tasks-table" rowspan="1" colspan="1" style="width: 80px;" aria-sort="ascending" aria-label="Due Date: activate to sort column descending">Due Date</td>
+<td class="sorting_disabled" rowspan="1" colspan="1" style="width: 67px;" aria-label="Options">Options</td></tr>
+</thead>
+<tbody class="small-text">
+{% if upcoming %}
+{% for upcoming in upcoming %}
+<tr role="row" class="odd">
+<td><a href="#">{{ upcoming.name }}</a></td>
+<td><label class="label label-primary">{{ upcoming.status }}</label></td>
+<td><a href="#">{{ upcoming.start_date }}</a></td>
+<td><div class="progress" style="height: 15px;">
+	<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{ overdue.progressbar }}%" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="0%">
+	<span class="sr-only">{{ upcoming.progressbar }}% Complete</span>
+	</div></div></td>
+	<td class="sorting_1">{{ upcoming.due_date }}</td>
+	<td><a href="#" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-list-alt"></span></a>
+	<a href="#" class="btn btn-warning btn-xs" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></a>
+	<a href="#" class="btn btn-danger btn-xs"  title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+	</td></tr>
+{% endfor %}
+{% else %}
+<tr class="odd"><td valign="top" colspan="6" class="dataTables_empty">No data available in table</td></tr></tbody>
+{% endif %}</table></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="tasks-table_info" role="status" aria-live="polite">Showing 0 to 0 of 0 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_full_numbers" id="tasks-table_paginate"><ul class="pagination"><li class="paginate_button first disabled" id="tasks-table_first"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="0" tabindex="0">First</a></li><li class="paginate_button previous disabled" id="tasks-table_previous"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="1" tabindex="0">Previous</a></li><li class="paginate_button next disabled" id="tasks-table_next"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="2" tabindex="0">Next</a></li><li class="paginate_button last disabled" id="tasks-table_last"><a href="http://titan.patchesoft.com/projects/view/8#" aria-controls="tasks-table" data-dt-idx="3" tabindex="0">Last</a></li></ul></div></div></div></div>
+</div>
+
+</div>
+
+
+</div>
+<div class="col-md-4">
+
+<div class="white-area-content">
+<div class="db-header clearfix">
+    <div class="page-header-simple-title">Project Budget</div>
+</div>
+{% if p.budget == 0 %}
+<p>No Budget has been settled for this project</p>
+{% else %}
+<div class="form-group">
+      <label for="username-in" class="col-md-7 label-heading">Total Budget:</label>
+      <div class="col-md-5" style="color:green;">
+            {{ p.budget }} Fcfa
+      </div>
+</div>
+<br><br>
+  <div class="form-group">
+      <label for="username-in" class="col-md-7 label-heading">Total Expenses:</label>
+      <div class="col-md-5" style="color:green;">
+            {{ expense }} Fcfa
+      </div>
+  </div>
+  <br><br>
+<div class="form-group">
+      <label for="username-in" class="col-md-7 ">Remaining:</label>
+      <div class="col-md-5" style="color:green;">
+            {{ p.remaining }} Fcfa
+      </div>
+</div>
+{% endif %}
+</div>
+
+<div class="white-area-content content-separator">
+
+<div class="db-header clearfix">
+    <div class="page-header-simple-title">Team</div>
+    <div class="db-header-extra form-inline">
+
+               <a href="http://titan.patchesoft.com/team/index/8" class="btn btn-round btn-sm" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Add Team Member"><span class="glyphicon glyphicon-plus"></span></a>
+
+</div>
+</div>
+
+<table class="table table-bordered table-hover">
+<tbody>
+{% for t in team %}
+<tr><td> <div class="user-box-avatar">
+                <div class="online-dot-user" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Online"></div>
+                <a href="#"><img src="{% static 'images/user.png' %}" title="" data-toggle="tooltip" data-placement="right" data-original-title="uhack"></a>
+                </div><div class="user-box-name"><p>{{ t.member.first_name }} {{ t.member.last_name }} </p><p class="user-box-username"><a href="#">@{{ t.member.username }}</a> </p></div></td>
+                <td>{% for r in t.role.all %}<label class="label label-default"> {{ r }} </label> {% endfor %}</td></tr>
+{% endfor %}</tbody></table>
+</div>
+
+<div class="white-area-content content-separator">
+<div class="db-header clearfix">
+    <div class="page-header-simple-title">Recent Files</div>
+    <div class="db-header-extra form-inline">
+
+               <a href="http://titan.patchesoft.com/files/add_file/8" class="btn btn-round btn-sm" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Add File"><span class="glyphicon glyphicon-plus"></span></a>
+
+</div>
+</div>
+
+<table class="table">
+<tbody>
+{% for f in file %}
+<tr><td><a href="">{{ f.file_name }}</a></td><td>{{ f.types }}</td></tr>
+{% endfor %}
+</tbody></table>
+
+</div>
+
+<div class="white-area-content content-separator">
+<div class="db-header clearfix">
+    <div class="page-header-simple-title">Recent Activity</div>
+    <div class="db-header-extra form-inline">
+
+</div>
+</div>
+
+<table class="table">
+<tbody>
+{% for a in activity %}
+<tr><td width="30">
+<div class="user-box-avatar">
+                <div class="online-dot-user" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Online"></div>
+                <a href="#"><img src="{% static 'images/user.png' %}" title="" data-toggle="tooltip" data-placement="right" data-original-title="{{ a.user }}"></a>
+                </div></td><td><p class="task-blob-title"><a href="#">{{ a.user }}</a> {{ a.action }} <b>{{ a.all_activity }}</b>.</p>
+<p class="task-blob-date">{{ a.added_at }}</p>
+</td></tr>
+{% endfor %}
+</tbody></table>
+</div>
+
+</div>
+</div>
+    </div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-folder-open"></span> Project</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("search-input");
+  filter = input.value.toUpperCase();
+  table = document.getElementById('tbd');
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+        console.log(td);
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+};
+$(document).ready(function() {
+    var showForm = function() {
+        console.log("what the fuck")
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+        $('#addModal').modal('show');
+      },
+      success: function(data) {
+          console.log('yes na me this');
+        $('#addModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+  var saveForm = function() {
+  var form = $(this);
+  var formData = new FormData(form[0])
+  $.ajax({
+  url: form.attr('data-url'),
+  data: formData,
+  type: form.attr('method'),
+  dataType: 'json',
+  async:true,
+  cache:false,
+  contentType: false,
+  enctype:form.attr("enctype"),
+  processData: false,
+  success: function(data) {
+    if (data.form_is_valid){
+        $('#projects-table tbody').html(data.project_list);
+        $('#addModal').modal('hide');
+        $('#message').addClass('show');
+        $('#message').text(data.sms)
+    }
+    else {
+       $('#addModal .modal-body').html(data.html_form)
+    }
+  },
+
+  });
+  		return false;
+};
+$(".show-form").click(showForm);
+$("#addModal").on("submit",".create-form",saveForm);
+
+})
+
+</script>
+{% endblock %}

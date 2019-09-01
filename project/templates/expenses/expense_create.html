@@ -1,0 +1,57 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<script type="text/javascript" src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="/static/ckeditor/ckeditor-init.js" data-ckeditor-basepath="/static/ckeditor/ckeditor/" id="ckeditor-init-script"></script>
+
+<form enctype="multipart/form-data" method=POST data-url="{% url 'project:expense_create' %}" class="form-horizontal create-form" >
+   {% csrf_token %}
+   {% if error_sms %}
+      <div class="form-group">
+         <span class="ui-state-error-text col-md-offset-2 label-heading" style="font-size: small">*{{ error_sms }}</span>
+       </div>
+   {% endif %}
+   <div class="form-group">
+        <label for="p-in" class="col-md-2 label-heading">Project:</label>
+      <div class="col-md-10 ui-front">
+         <select class="browser-default form-control" name="project" required>
+         {% for p in myproject %}
+          <option value="{{ p.id }}">{{ p.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+   <div class="form-group">
+            <label for="p-in" class="col-md-2 label-heading">item:</label>
+         <div class="col-md-10 ui-front">
+         {{ form.item }}
+         </div>
+   </div>
+
+   <div class="form-group">
+        <label for="p-in" class="col-md-2 label-heading">Cost:</label>
+         <div class="col-md-10 ui-front">
+         {{ form.cost }}
+        </div>
+    </div>
+
+   <div class="form-group">
+           <label for="p-in" class="col-md-2 label-heading">Quantity:</label>
+
+      <div class="col-md-10 ui-front">
+        {{ form.quantity }}
+      </div>
+   </div>
+   <div class="form-group">
+           <label for="p-in" class="col-md-2 label-heading">Note:</label>
+
+      <div class="col-md-10 ui-front">
+        {{ form.note }}
+      </div>
+   </div>
+
+ <div class="modal-footer">
+   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+   <input type="submit" class="btn btn-primary" value="Add New Resource">
+</div>
+</form>

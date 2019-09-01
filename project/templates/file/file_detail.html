@@ -1,0 +1,129 @@
+{% extends 'base_task.html' %}
+     {% load staticfiles %}
+
+{% block content %}
+
+    <div id="main-content">
+
+        <div id="responsive-menu-links">
+          <select name="link" onchange="window.location.href=$(this).val();" class="form-control">
+          <option value="http://titan.patchesoft.com/">Overview</option>
+          <option value="http://titan.patchesoft.com/members">Members</option>
+          <option value="http://titan.patchesoft.com/user_settings">Settings</option>
+                    <option value="http://titan.patchesoft.com/projects">Projects</option>
+                                <option value="http://titan.patchesoft.com/calendar">Your Events</option>
+            <option value="http://titan.patchesoft.com/calendar/all">All Events</option>
+                                <option value="http://titan.patchesoft.com/tasks">Your Project Tasks</option>
+            <option value="http://titan.patchesoft.com/tasks/assigned">Your Assigned Tasks</option>
+            <option value="http://titan.patchesoft.com/tasks/templates">Templates</option>
+                                                      <option value="http://titan.patchesoft.com/files">Your Project Files</option>
+                                            <option value="http://titan.patchesoft.com/team">Your Team</option>
+                                            <option value="http://titan.patchesoft.com/time">Your Timers</option>
+                        <option value="http://titan.patchesoft.com/time/stats">Your Stats</option>
+                                              <option value="http://titan.patchesoft.com/tickets">Tickets</option>
+              <option value="http://titan.patchesoft.com/tickets/your">Assigned Tickets</option>
+                                                                    <option value="http://titan.patchesoft.com/finance">Your Finance</option>
+                                                                  <option value="http://titan.patchesoft.com/notes/personal">Personal</option>
+            <option value="http://titan.patchesoft.com/notes/your">Project Notes</option>
+                                  <option value="http://titan.patchesoft.com/leads">Leads</option>
+              <option value="http://titan.patchesoft.com/leads/your">Your Leads</option>
+              <option value="http://titan.patchesoft.com/leads/forms">Lead Forms</option>
+              <option value="http://titan.patchesoft.com/leads/manage">Manage</option>
+
+                      <option value="http://titan.patchesoft.com/reports">Tickets Reports</option>
+            <option value="http://titan.patchesoft.com/reports/time">Time Reports</option>
+            <option value="http://titan.patchesoft.com/reports/finance">Finance Reports</option>
+            <option value="http://titan.patchesoft.com/reports/invoices">Invoices Reports</option>
+                    </select>
+</div>
+
+        <div class="white-area-content">
+
+<div class="db-header clearfix">
+    <div class="page-header-title"> <span class="glyphicon glyphicon-open-file"></span> File</div>
+    <div class="db-header-extra"> <a href="{% url 'project:file_delete' file.id %}" class="btn btn-danger btn-xs stopAjax" onclick="functionName(event)" title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Delete">Delete</a></div>
+    <div class="db-header-extra"> <button  class="btn btn-primary btn-xs show-form" data-url="{% url 'project:file_update' file.id %}" >Edit</button></div>
+
+</div>
+
+
+<table class="table table-bordered">
+<tbody><tr class="table-header"><td>File Info</td><td>Data</td></tr>
+<tr><td>File Name:</td><td>{{ file.file_name }}</td></tr>
+<tr><td>Download:</td><td><a target="_blank" class="stopAjax" href="{{ file.upload_file.url }}">{{ file.upload_file.url }}</a></td></tr>
+<tr><td>File Type:</td><td>{{ file.types }}</td></tr>
+<tr><td>File Size:</td><td>{{ file.upload_file.size }} kb</td></tr>
+<tr><td>Uploaded:</td><td>{{ file.added_at }}</td></tr>
+<tr><td>Project:</td><td>{{ file.project.name }}</td></tr>
+<tr><td>Uploaded By:</td><td><a href="#">{{ file.user }}</a></td></tr>
+</tbody></table>
+
+<h4><span class="glyphicon glyphicon-pushpin"></span> File Notes</h4>
+{{ file.note|safe }}
+
+<hr>
+</div></div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-file"></span> File</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function() {
+    var showForm = function() {
+      var btn = $(this);
+      $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function() {
+        $('#updateModal').modal('show');
+      },
+      success: function(data) {
+          console.log('yes na me this');
+        $('#updateModal .modal-body').html(data.html_form)
+      }
+      })
+  };
+  var saveForm = function() {
+  var form = $(this);
+  var formData = new FormData(form[0])
+  $.ajax({
+  url: form.attr('data-url'),
+  data: formData,
+  type: form.attr('method'),
+  dataType: 'json',
+  async:true,
+  cache:false,
+  contentType: false,
+  enctype:form.attr("enctype"),
+  processData: false,
+  success: function(data) {
+    if (data.form_is_valid){
+        $('#projects-table tbody').html(data.project_task);
+        $('#updateModal').modal('hide');
+        $('#message').addClass('show');
+        $('#message').text(data.sms)
+    }
+    else {
+       $('#addModal .modal-body').html(data.html_form)
+    }
+  },
+
+  });
+  		return false;
+};
+$(".show-form").click(showForm);
+$("#updateModal").on("submit",".create-form",saveForm);
+
+})
+
+</script>
+{% endblock %}

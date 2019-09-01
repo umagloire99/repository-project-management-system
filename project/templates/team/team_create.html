@@ -1,0 +1,91 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<form enctype="multipart/form-data" class="form-horizontal" method=POST action="{% url 'project:team_create' 0 %}">
+   {% csrf_token %}
+   <div class="form-group">
+         <label for="p-in" class="col-md-4 label-heading">Username</label>
+         <div class="col-md-8 ui-front">
+                 <select name="member" class="form-control" required>
+                               {% for u in users %}
+                                 <option value="{{ u.id }}">{{ u.username }}</option>
+                               {% endfor %}
+                 </select>         </div>
+     </div>
+<div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Project</label>
+         <div class="col-md-8 ui-front">
+                 <select name="project" class="form-control">
+                                 {% for p in project %}
+                                 <option value="{{ p.id }}">{{ p.name }}</option>
+                                  {% endfor %}
+                 </select>
+         </div>
+</div>
+ <div class="form-group">
+      <label for="p-in" class="col-md-4 label-heading">Admin</label>
+      <div class="col-md-8 ui-front">
+           <input type="checkbox" name="role" value="1">
+           <p>Full access to the project.</p>
+      </div>
+ </div>
+ <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Team</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="8">
+                        <p>Can manage team members of the project.</p>
+                    </div>
+</div>
+
+            <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Files</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="2">
+                        <p>Can manage files of the project.</p>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Tasks</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="7">
+                        <p>Can manage tasks of the project.</p>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Calendar</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="4">
+                        <p>Can manage calendar events of the project.</p>
+                    </div>
+            </div>
+
+            <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Notes</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="3">
+                        <p>Can manage notes of the project.</p>
+                    </div>
+            </div>
+            <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Reports</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="6">
+                        <p>Can view reports of the project.</p>
+                    </div>
+            </div>
+
+            <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Inventory</label>
+                    <div class="col-md-8 ui-front">
+                        <input type="checkbox" name="role" value="5">
+                        <p>Can manage inventory of the project.</p>
+                    </div>
+            </div>
+ <div class="modal-footer">
+ {% for u in users %}
+    {{ u }}
+    {% endfor %}
+   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+   <input type="submit" class="btn btn-primary" value="ADD MEMBER">
+</div>
+</form>
